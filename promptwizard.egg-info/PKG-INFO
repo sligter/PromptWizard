@@ -1,3 +1,27 @@
+Metadata-Version: 2.4
+Name: promptwizard
+Version: 1.0.0
+Summary: 提示词优化系统
+Home-page: https://github.com/microsoft/PromptWizard
+Author: PromptWizard Team
+Author-email: promptwizard@microsoft.com
+Requires-Python: >=3.8.0
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: gradio>=4.19.0
+Requires-Dist: pyyaml>=6.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: tqdm>=4.65.0
+Requires-Dist: openai>=1.0.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.0.0; extra == "dev"
+Requires-Dist: black>=23.0.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Dynamic: author-email
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-python
+
 # PromptWizard
 
 PromptWizard是一个用于大语言模型提示词优化的系统，可以帮助用户自动化优化提示词，提升模型输出的质量。

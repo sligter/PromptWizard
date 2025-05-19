@@ -1,0 +1,57 @@
+# LLM Configuration for PromptWizard
+# 此配置文件用于设置LLM模型的参数和提供商信息
+
+# Azure OpenAI配置
+azure_open_ai:
+  api_key: "" # 可以留空并使用环境变量
+  azure_endpoint: "" # 可以留空并使用环境变量
+  api_version: "2023-05-15"
+  use_azure_ad: false
+  azure_oai_models:
+    - unique_model_id: "gpt-4o" # 唯一标识符，在其他配置文件中引用
+      model_type: "chat" # 模型类型: chat, completion, embeddings, multimodal
+      model_name_in_azure: "gpt-4o" # Azure中部署的模型名称
+      deployment_name_in_azure: "your-deployment-name" # Azure中的部署名称
+      track_tokens: true # 是否追踪token使用量
+      req_per_min: 100 # 每分钟请求限制
+      tokens_per_min: 100000 # 每分钟token限制
+      error_backoff_in_seconds: 30 # 错误后重试间隔时间(秒)
+
+# 自定义模型配置（使用自己的模型服务）
+custom_models:
+  - unique_model_id: "custom-model" # 唯一标识符，在其他配置文件中引用
+    model_type: "chat" # 模型类型
+    path_to_py_file: "path/to/your/custom_llm.py" # 自定义LLM实现文件路径
+    class_name: "YourCustomLLM" # 自定义LLM类名
+    track_tokens: true
+    req_per_min: 60
+    tokens_per_min: 60000
+    error_backoff_in_seconds: 30
+
+# 用户限制
+user_limits:
+  max_wait_time_in_secs: 300 # 用户最长等待时间(秒)
+  timeout_waiting_for_other_reqs_in_secs: 60 # 排队等待其他请求的最大超时时间(秒)
+
+# 调度器限制
+scheduler_limits:
+  check_for_cancellation_in_secs: 1 # 检查取消请求的频率(秒)
+
+# 环境变量配置示例（需在.env文件中设置）
+# 
+# # 基础环境变量
+# MODEL_TYPE=CustomModel  # 使用的模型类型: AzureOpenAI, OpenAI, CustomModel
+# 
+# # 对于OpenAI API
+# USE_OPENAI_API_KEY=True
+# OPENAI_API_KEY=your_openai_api_key
+# OPENAI_MODEL_NAME=gpt-4o
+# OPENAI_BASE_URL=https://your-custom-api-url.com/v1  # 自定义BASE_URL
+# OPENAI_API_VERSION=2023-05-15
+# OPENAI_TEMPERATURE=0.7  # 自定义温度参数
+#
+# # 对于Azure OpenAI
+# AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+# AZURE_OPENAI_DEPLOYMENT_NAME=your-deployment-name
+# AZURE_OPENAI_API_KEY=your_azure_api_key
+# AZURE_OPENAI_TEMPERATURE=0.5  # 自定义温度参数 

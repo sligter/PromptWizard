@@ -1,11 +1,38 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "promptwizard"
+version = "1.0.0"
+description = "提示词优化系统"
+authors = [
+    {name = "PromptWizard Team"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "gradio>=4.19.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "tqdm>=4.65.0",
+    "openai>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "isort>=5.12.0",
+]
+
+[tool.setuptools]
+packages = ["promptwizard"]
+
 [tool.black]
 line-length = 88
-target-version = ['py38']
-include = '\.pyi?$'
+target-version = ["py38"]
 
 [tool.isort]
-atomic = true
 profile = "black"
 line_length = 88
-skip_gitignore = true
-known_first_party = ["promptwizard"]

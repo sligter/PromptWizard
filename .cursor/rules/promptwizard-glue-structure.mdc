@@ -1,0 +1,21 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# promptwizard 目录结构与功能说明
+
+- [promptwizard/](mdc:promptwizard) 目录是主包目录，包含核心代码。
+  - [glue/](mdc:promptwizard/glue) 目录下包含 prompt 优化相关模块（如 promptopt、techniques、common 等）。
+  - [version.py](mdc:promptwizard/version.py) 提供包的版本信息。
+  - [__init__.py](mdc:promptwizard/__init__.py) 用于包初始化。
+
+- [demos/scenarios/configs/](mdc:demos/scenarios/configs) 目录下存放 YAML 配置文件，如 promptopt_config.yaml、setup_config.yaml 等，用于控制 prompt 优化流程。
+
+- [demos/scenarios/dataset_scenarios_demo.ipynb](mdc:demos/scenarios/dataset_scenarios_demo.ipynb) 是主要的 Jupyter Notebook 演示文件，展示了不同数据场景下 PromptWizard 的用法，包括无训练数据、合成数据和真实训练数据三种场景。
+
+- 典型用法：
+  1. 通过修改 YAML 配置文件设定任务描述、优化轮数等参数。
+  2. 使用 GluePromptOpt 类进行 prompt 优化和推理。
+  3. 可选地自定义数据处理类（如 GSM8k）以适配特定数据集。
+

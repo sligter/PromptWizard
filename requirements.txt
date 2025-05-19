@@ -1,0 +1,12 @@
+llama-index-core>=0.10.0
+openai>=1.0.0
+python-dotenv
+pyyaml
+azure-identity
+azure-core
+tiktoken
+tenacity
+requests
+typing
+datasets
+tqdm

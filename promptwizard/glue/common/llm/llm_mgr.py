@@ -14,19 +14,37 @@ from ..utils.runtime_tasks import str_to_class
 import os
 logger = get_glue_logger(__name__)
 
-def call_api(messages):
-
+def call_api(messages, temperature=None):
+    """调用OpenAI或Azure OpenAI的API。
+    
+    Args:
+        messages: 消息列表
+        temperature: 生成温度参数，若不提供则从环境变量获取
+        
+    Returns:
+        API响应中的文本内容
+    """
     from openai import OpenAI
     from azure.identity import get_bearer_token_provider, AzureCliCredential
     from openai import AzureOpenAI
 
-    if os.environ['USE_OPENAI_API_KEY'] == "True":
-        client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+    # 如果没有提供温度参数，则从环境变量获取
+    if temperature is None:
+        if os.environ.get('USE_OPENAI_API_KEY') == "True":
+            temperature = float(os.environ.get("OPENAI_TEMPERATURE", 0.0))
+        else:
+            temperature = float(os.environ.get("AZURE_OPENAI_TEMPERATURE", 0.0))
+
+    if os.environ.get('USE_OPENAI_API_KEY') == "True":
+        client = OpenAI(
+            api_key=os.environ["OPENAI_API_KEY"],
+            base_url=os.environ.get("OPENAI_BASE_URL")  # 支持自定义BASE_URL
+        )
 
         response = client.chat.completions.create(
-        model=os.environ["OPENAI_MODEL_NAME"],
-        messages=messages,
-        temperature=0.0,
+            model=os.environ["OPENAI_MODEL_NAME"],
+            messages=messages,
+            temperature=temperature,  # 使用温度参数
         )
     else:
         token_provider = get_bearer_token_provider(
@@ -40,7 +58,7 @@ def call_api(messages):
         response = client.chat.completions.create(
             model=os.environ["AZURE_OPENAI_DEPLOYMENT_NAME"],
             messages=messages,
-            temperature=0.0,
+            temperature=temperature,  # 使用温度参数
         )
 
     prediction = response.choices[0].message.content
@@ -49,15 +67,28 @@ def call_api(messages):
 
 class LLMMgr:
     @staticmethod
-    def chat_completion(messages: Dict):
-        llm_handle = os.environ.get("MODEL_TYPE", "AzureOpenAI")
+    def chat_completion(messages: Dict, temperature=None):
+        """执行聊天完成任务。
+        
+        Args:
+            messages: 消息列表
+            temperature: 生成温度参数
+            
+        Returns:
+            API响应文本
+        """
+        llm_handle = os.environ.get("MODEL_TYPE", "OpenAI")
         try:
-            if(llm_handle == "AzureOpenAI"): 
-                # Code to for calling LLMs
-                return call_api(messages)
-            elif(llm_handle == "LLamaAML"):
-                # Code to for calling SLMs
-                return 0
+            if(llm_handle == "AzureOpenAI" or llm_handle == "OpenAI"): 
+                # 传递温度参数
+                return call_api(messages, temperature)
+            elif(llm_handle == "CustomModel"):
+                # 可以在这里添加自定义模型的调用逻辑
+                # 例如: return custom_api_call(messages, temperature)
+                return call_api(messages, temperature)  # 默认仍使用标准调用
+            else:
+                # 默认调用方式
+                return call_api(messages, temperature)
         except Exception as e:
             print(e)
             return "Sorry, I am not able to understand your query. Please try again."

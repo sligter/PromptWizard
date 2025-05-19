@@ -1,0 +1,60 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# 在PromptWizard中使用自定义模型提供商和温度参数
+
+## 主要文件和配置
+
+1. [llm_config.yaml](mdc:demos/scenarios/configs/llm_config.yaml) - 用于配置模型提供商和自定义模型设置
+2. [promptwizard/glue/common/llm/llm_mgr.py](mdc:promptwizard/glue/common/llm/llm_mgr.py) - LLM调用管理类
+3. [promptwizard/glue/common/llm/custom_llm_template.py](mdc:promptwizard/glue/common/llm/custom_llm_template.py) - 自定义LLM模板
+4. [promptwizard/glue/llm_config_readme.md](mdc:promptwizard/glue/llm_config_readme.md) - 详细的配置说明文档
+
+## 配置步骤
+
+### 1. 环境变量配置
+
+在根目录创建`.env`文件，设置以下环境变量：
+
+```
+# 模型类型
+MODEL_TYPE=OpenAI  # 或 AzureOpenAI, CustomModel
+
+# OpenAI配置
+USE_OPENAI_API_KEY=True
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL_NAME=gpt-4o
+OPENAI_BASE_URL=https://your-custom-api-url.com/v1  # 自定义BASE_URL
+OPENAI_TEMPERATURE=0.7  # 自定义温度参数
+
+# 自定义模型配置
+CUSTOM_BASE_URL=http://localhost:8000
+CUSTOM_API_KEY=your_key
+CUSTOM_TEMPERATURE=0.8
+```
+
+### 2. 自定义模型配置
+
+如果需要使用非OpenAI/Azure模型，请配置`llm_config.yaml`：
+
+```yaml
+custom_models:
+  - unique_model_id: "custom-model"
+    model_type: "chat"
+    path_to_py_file: "path/to/custom_llm.py"
+    class_name: "CustomLLM"
+```
+
+### 3. 使用方法
+
+在代码中调用LLM时可以指定温度参数：
+
+```python
+from promptwizard.glue.common.llm.llm_mgr import LLMMgr
+
+response = LLMMgr.chat_completion(messages, temperature=0.8)
+```
+
+更详细的配置说明和使用方法请参考[llm_config_readme.md](mdc:promptwizard/glue/llm_config_readme.md)文档。
