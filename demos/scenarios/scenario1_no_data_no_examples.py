@@ -18,24 +18,40 @@ def run_scenario1():
     
     # 定义配置参数，替代YAML文件
     promptopt_config = {
-        "task_description": "You are a mathematics expert. You will be given a mathematics problem which you need to solve",
-        "base_instruction": "Lets think step by step.",
-        "mutation_rounds": 5,
-        "max_history_length": 10,
-        "use_examples_in_context": False,
-        "prompt_templates_file": "configs/prompt_library.yaml"  # 仍需要模板库
+        "task_description": "你是一个数学专家，你将得到一个数学问题，你需要解决它",
+        "base_instruction": "让我们一步一步地思考。",
+        "answer_format": "对于每个问题，先进行推理，然后给出正确答案。",
+        "mutation_rounds": 2,
+        "few_shot_count": 5,
+        "generate_expert_identity": True,
+        "generate_intent_keywords": False,
+        "generate_reasoning": True,
+        "mutate_refine_iterations": 3,
+        "min_correct_count": 3,
+        "max_eval_batches": 6,
+        "num_train_examples": 20,
+        "prompt_technique_name": "critique_n_refine",
+        "questions_batch_size": 1,
+        "refine_instruction": True,
+        "refine_task_eg_iterations": 3,
+        "seen_set_size": 20,
+        "style_variation": 5,
+        "top_n": 1,
+        "unique_model_id": "Pro/deepseek-ai/DeepSeek-V3",
+        # "max_history_length": 10,
+        # "prompt_templates_file": "configs/prompt_library.yaml"
     }
     
     setup_config = {
         "experiment_name": "no_data_no_examples",
         "experiment_id": "scenario1",
-        "model_id": "gpt-4o"  # 确保这个模型ID在环境变量或系统中已配置
+        "model_id": "Pro/deepseek-ai/DeepSeek-V3"  # 确保这个模型ID在环境变量或系统中已配置
     }
     
     # 创建临时配置文件或直接传入参数
     print("初始化PromptOpt...")
     gp = GluePromptOpt(
-        promptopt_config=promptopt_config,  # 直接传入字典而非文件路径
+        prompt_config=promptopt_config,  # 直接传入字典而非文件路径
         setup_config=setup_config,
         dataset_jsonl=None,
         data_processor=None
